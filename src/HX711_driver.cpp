@@ -1,7 +1,11 @@
-#include "HX711_driver.h"
-#include "misc.h"
+#include "../inc/HX711_driver.h"
+#include "../inc/misc.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
+
+#define INPUT 0
+#define OUTPUT 1
+
 
 void HX711_init(HX711_t* sensor, uint8_t dt, uint8_t sclk)
 {
@@ -9,6 +13,9 @@ void HX711_init(HX711_t* sensor, uint8_t dt, uint8_t sclk)
     sensor->sclk_pin = sclk;
     sensor->offset = 0;
     sensor->scale = 1.0f;
+
+	my_pinMode(sensor->dt_pin, INPUT);
+	my_pinMode(sensor->sclk_pin, OUTPUT);
 }
 
 
@@ -20,12 +27,12 @@ int32_t HX711_readRaw(HX711_t* sensor)
 	uint8_t i;
 	cli(); // no interrupts
 	for (i = 0; i < 24; ++i) {
-		PORTD |= (1 << sensor->sclk_pin); // write HIGH SCLK
+		my_digitalWrite(sensor->sclk_pin, 1); // write HIGH SCLK
 
 		value = value << 1;
 		value |= my_digitalRead(sensor->dt_pin);
 
-		PORTD &= ~(1 << sensor->sclk_pin); // write LOW SCLK
+		my_digitalWrite(sensor->sclk_pin, 0); // write LOW SCLK
 	}
 
 	if (value & 0x800000L) {
@@ -34,8 +41,8 @@ int32_t HX711_readRaw(HX711_t* sensor)
 		value |= 0xFF000000L;
 	}
 
-	PORTD |= (1 << sensor->sclk_pin); // set channel A 128 rate
-	PORTD &= ~(1 << sensor->sclk_pin);
+	my_digitalWrite(sensor->sclk_pin, 1); // set channel A 128 rate
+	my_digitalWrite(sensor->sclk_pin, 0);
 	sei(); // interrupts back
 	return value;
 }
