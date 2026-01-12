@@ -19,6 +19,7 @@ void HX711_init(HX711_t* sensor, float scale)
 	my_pinMode(sensor->sclk_pin, OUTPUT);
 
 	HX711_set_scale(sensor, scale);
+	HX711_tare(sensor);
 }
 
 

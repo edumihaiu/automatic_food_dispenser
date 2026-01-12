@@ -34,7 +34,7 @@ void RTC_printTime() {
 	Serial.print(" Minute: ");
 	Serial.print(now.minute);
 	Serial.print(" Second: ");
-	Serial.println(now.second);
+	Serial.print(now.second);
 }
 
 int RTC_isMealTime(uint8_t targetHour, uint8_t targetMin) {
