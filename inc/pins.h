@@ -19,4 +19,9 @@
 #define IN3 9
 #define IN4 10
 
+// BT
+
+#define BT_RX 11
+#define BT_TX 12
+
 #endif // PINS_H

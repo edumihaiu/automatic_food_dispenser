@@ -2,11 +2,12 @@
 #include "../inc/Stepper_module.h"
 #include "../inc/HX711_driver.h"
 #include "../inc/RTC_module.h"
+#include "../inc/pins.h"
 
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
-SoftwareSerial BT(8, 9);
+SoftwareSerial BT(BT_RX, BT_TX); // RX, TX
 extern HX711_t cantar;
 
 void BT_init() {
