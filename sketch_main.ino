@@ -1,7 +1,8 @@
-#include "Arduino.h"
+#include <Arduino.h>
 #include "inc/HX711_driver.h"
 #include "inc/RTC_module.h"
 #include "inc/Stepper_module.h"
+#include "inc/BT_module.h"
 
 
 HX711_t cantar;
@@ -12,6 +13,7 @@ void setup() {
   RTC_init();
   RTC_setTime(26, 1, 13, 1, 12, 55); // Set time to Jan 12, 2026, 11:31:00
   Stepper_init();
+  BT_init();
 
   Serial.println("setup done");
 }
@@ -19,7 +21,9 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   static unsigned long lastCheck = 0;
-    
+  
+  BT_checkCommand();
+
   if (millis() - lastCheck >= 1000) {
       lastCheck = millis();
 
@@ -29,7 +33,7 @@ void loop() {
         if (res == 1) {
           Serial.println("sucessful");
         } else {
-          Serial.println("failed");
+          Serial.println("failed: check level or mechanism");
         }
       } else {
         Serial.println("not meal time yet");

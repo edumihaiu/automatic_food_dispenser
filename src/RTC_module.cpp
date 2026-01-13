@@ -2,9 +2,10 @@
 #include "../inc/RTC_module.h"
 #include "../inc/pins.h"
 #include <Arduino.h>
+#include <SoftwareSerial.h>
 
 static Ds1302 rtc(RTC_RST, RTC_CLK, RTC_DAT); // RST, DAT, CLK
-
+extern SoftwareSerial BT;
 void RTC_init() {
     rtc.init();
 }
@@ -35,6 +36,23 @@ void RTC_printTime() {
 	Serial.print(now.minute);
 	Serial.print(" Second: ");
 	Serial.print(now.second);
+}
+
+void RTC_printBTTime() {
+	Ds1302::DateTime now;
+	rtc.getDateTime(&now);
+    BT.print("Year: ");
+    BT.print(now.year);
+    BT.print("Month: ");
+    BT.print(now.month);
+    BT.print("Day: ");
+    BT.print(now.day);
+	BT.print("Hour: ");
+	BT.print(now.hour);
+	BT.print(" Minute: ");
+	BT.print(now.minute);
+	BT.print(" Second: ");
+	BT.print(now.second);
 }
 
 int RTC_isMealTime(uint8_t targetHour, uint8_t targetMin) {
